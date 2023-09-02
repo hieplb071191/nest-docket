@@ -1,0 +1,41 @@
+version: '3.7'
+volumes:
+  9f0da73667dcbf8c42b295a0d9b832c3b3f41c068d8de6c58a10724118a5d04b:   
+
+   
+services:
+     
+  nest:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - postgres  
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: nestjs
+  postgres:
+    image: postgres:15.1
+    restart: 'always'
+    networks:
+      - postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - 9f0da73667dcbf8c42b295a0d9b832c3b3f41c068d8de6c58a10724118a5d04b:/data/postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=nestjs
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin 
+networks:
+  postgres:
+    driver: bridge      
