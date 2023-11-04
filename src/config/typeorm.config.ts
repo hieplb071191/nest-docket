@@ -5,13 +5,15 @@ dotenvConfig({ path: '.env' });
 import { ConfigService } from '@nestjs/config';
 const config = new ConfigService()
 
+config.get<string>('DB_HOST')
+
 export const ormconfig: DataSourceOptions = {
-    type: 'mysql',
-    host:  `${process.env.DB_HOST}`,
-    port:  parseInt(process.env.DB_PORT),
-    username: `${process.env.DB_USER}`,
-    password: `${process.env.DB_PASSWORD}`,
-    database: `${process.env.DB_NAME}`,
+    type: 'postgres',
+    host:  config.get<string>('DB_HOST'),
+    port:  config.get<number>('DB_PORT'),
+    username: config.get<string>('DB_USER'),
+    password: config.get<string>('DB_PASSWORD'),
+    database: config.get<string>('DB_NAME'),
     synchronize: false,
 }
 
@@ -22,6 +24,4 @@ export const dataSourceOptions: DataSourceOptions = {
     
 }
 
-
-const dataSource = new DataSource(dataSourceOptions)
-export default dataSource
+export default new DataSource(dataSourceOptions)

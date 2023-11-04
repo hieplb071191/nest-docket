@@ -10,4 +10,8 @@ export class UserService {
     async getAll(query) {
         return await this.repository.findAll(query)
     }
+
+    async createUser(params) {
+        return await this.repository.create(params)
+    }
 }
