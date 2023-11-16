@@ -1,7 +1,7 @@
 import { userSigninTypeEnum } from "src/Common/user-type.enum";
 import { Addresses } from "src/modules/address/entities/address.entity";
 import { Categories } from "src/modules/category/entities/category.entity";
-import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn, VirtualColumn } from "typeorm";
 
 @Entity()
 export class Users {
@@ -38,9 +38,16 @@ export class Users {
     })
     categories: Categories[]
 
-    @OneToMany((type) => Addresses, (address) => address.users)
-    @JoinColumn({
-        name: 'id'
+
+    @VirtualColumn({
+        query: (alias) => alias
     })
-    addresses: Addresses[]
+    distance: string
+
+    @OneToOne((type) => Addresses, {cascade: true})
+    @JoinColumn({
+        name: 'id',
+        referencedColumnName: 'userId'
+    })
+    addresses: Addresses
 }

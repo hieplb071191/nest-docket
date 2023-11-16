@@ -5,6 +5,9 @@ import { SignUpDto } from './dto/signup.dto';
 import { JwtService } from '@nestjs/jwt';
 import { GoogleService } from 'src/shared/services/google.service';
 import { EmailService } from '../email/email.service';
+import { AddressService } from '../address/address.service';
+import * as moment from 'moment'
+
 
 @Injectable()
 export class AuthService {
@@ -13,7 +16,8 @@ export class AuthService {
         private readonly cryptoService: CryptoProviderService,
         private readonly jwtService: JwtService,
         private readonly googleService: GoogleService,
-        private readonly emailService: EmailService
+        private readonly emailService: EmailService,
+        private readonly addressService: AddressService
     ) {
 
     }
@@ -34,8 +38,24 @@ export class AuthService {
         if (oldUser && oldUser.length) {
             throw new BadRequestException('user existed')
         }
+        const {address} = dto
+        const {dob} = dto
+        delete dto.address
+        let date = moment(dob)
 
-        const payload =  await this.userRepository.create({...dto, password: hashPassword})
+        const payload =  await this.userRepository.create({...dto, password: hashPassword, dob: date})
+        if (payload && address) {
+            const addressModel = {
+                lat: address.lat,
+                long: address.long,
+                province: address['province'] ? address['province'] : 'aaaaa',
+                district: address['district'] ? address['district'] : 'aaaaa',
+                ward: address['ward'] ? address['ward'] : 'aaaaa',
+                specifically: address['specifically'] ? address['specifically'] : 'aaaaa',
+    
+            }
+            await this.addressService.create(addressModel, payload)
+        }
         const {username, email, isConfirm, loginSystem, isTwoFA, id} = payload;
         const token = await this.jwtService.signAsync(
             {
@@ -60,11 +80,7 @@ export class AuthService {
 
     async signinWithPassword(dto) {
         const { email, password } = dto;
-        const user = await this.userRepository.findOne({
-            where: {
-                email
-            }
-        })
+        const user = await this.userRepository.getInfo(dto)
 
         if (!user) {
             throw new UnauthorizedException('user or password not correct')
@@ -103,7 +119,7 @@ export class AuthService {
     }
 
     async signupWithGoogle(dto: any) {
-        let { email, username, dob, address, isTwoFA } = dto;
+        let { email, username, dob, address, isTwoFA = false } = dto;
         const user = await this.userRepository.findOne({where: [
             {email: email},
             { username: username }
@@ -114,7 +130,19 @@ export class AuthService {
             return {access_token};
         }
         dob = new Date(dob);
-        const newUser = await this.userRepository.create({...dto, dob});
+        const newUser = await this.userRepository.create({email,username, isTwoFA, dob});
+        if (newUser && address) {
+            const addressModel = {
+                lat: address.lat,
+                long: address.lng,
+                province: address['province'] ? address['province'] : 'aaaaa',
+                district: address['district'] ? address['district'] : 'aaaaa',
+                ward: address['ward'] ? address['ward'] : 'aaaaa',
+                specifically: address['specifically'] ? address['specifically'] : 'aaaaa',
+    
+            }
+            await this.addressService.create(addressModel, newUser)
+        }
         const payload = { id: newUser.id, isTwoFA: newUser.isTwoFA, username: newUser.username,email: newUser.email }
         const access_token = await this.jwtService.signAsync(payload);
         return {access_token};

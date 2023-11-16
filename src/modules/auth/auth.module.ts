@@ -9,11 +9,13 @@ import { GoogleService } from 'src/shared/services/google.service';
 import { EmailModule } from '../email/email.module';
 import { JwtStrategy } from 'src/strategies/jwt.strategy';
 import { RoleGuards } from 'src/guards/role.guard';
+import { AddressModule } from '../address/address.module';
 
 
 @Module({
   imports: [
     UserModule,
+    AddressModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({

@@ -14,4 +14,8 @@ export class UserService {
     async createUser(params) {
         return await this.repository.create(params)
     }
+
+    async getInfo(user) {
+        return await this.repository.getInfoUser(user.id)
+    }
 }
