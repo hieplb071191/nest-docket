@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto, SigninWithGoogleDto, SignupWithGoogleDto } from './dto/signup.dto';
+import { SignUpDto, SignUpWithGoogleDto, SigninWithGoogleDto, } from './dto/signup.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { User } from 'src/decorators/user.decorator';
 
@@ -35,7 +35,7 @@ export class AuthController {
     }
 
     @Post('/sign-with-google')
-    async signupWithgoogle(@Body()dto: SignupWithGoogleDto) {
+    async signupWithgoogle(@Body()dto: SignUpWithGoogleDto) {
         console.log(dto)
         const result = this.service.signupWithGoogle(dto)
         return result

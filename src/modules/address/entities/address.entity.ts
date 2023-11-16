@@ -1,8 +1,9 @@
 import { Users } from "src/modules/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
+@Index(['lat', 'long'], {unique: true})
 export class Addresses {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -31,24 +32,27 @@ export class Addresses {
     specifically: string;
 
     @Column({
-        type: String,
+        type: "real",
+        select: false,
     })
-    lat: string;
+    lat: number;
 
 
     @Column({
-        type: String,
+        type: "real",
+        select: false,
     })
-    long: string;
+    long: number;
 
     @Column({
         type: String
     })
     userId: string;
 
-    @ManyToOne((type) => Users, users => users.address)
+    @OneToOne((type) => Users)
     @JoinColumn({
-        name: 'userId'
+        name: 'userId',
+        referencedColumnName: 'id'
     })
     users: Users
 }

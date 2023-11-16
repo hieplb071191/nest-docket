@@ -10,6 +10,7 @@ import { AddressRepository } from './repositories/address.repository';
         TypeOrmModule.forFeature([Addresses])
     ],
   controllers: [AddressController],
-  providers: [AddressService, AddressRepository]
+  providers: [AddressService, AddressRepository],
+  exports: [AddressService, AddressRepository]
 })
 export class AddressModule {}
