@@ -43,7 +43,7 @@ export class SignUpDto {
 
 export class SigninWithGoogleDto {
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     credential: string;
 
     @IsString()
@@ -53,6 +53,11 @@ export class SigninWithGoogleDto {
     @IsString()
     @IsOptional()
     select_by: string;
+
+    @IsString()
+    @IsOptional()
+    access_token: string;
+
 }
 
 
