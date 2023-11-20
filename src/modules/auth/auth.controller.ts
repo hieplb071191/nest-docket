@@ -30,7 +30,7 @@ export class AuthController {
     @Post('/signinWithGoogle')
     async signinWithGoogle(@Body() dto: SigninWithGoogleDto, @User() user) {
         console.log(user)
-        const result = this.service.signinWithGoogle(dto.credential)
+        const result = this.service.signinWithGoogle(dto.access_token)
         return result
     }
 
