@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from '../user/repositories/users.repository';
-import { CryptoProviderService } from 'src/shared/services/crypto.service';
+import { CryptoProviderService } from '../../shared/services/crypto.service';
 import { SignUpDto } from './dto/signup.dto';
 import { JwtService } from '@nestjs/jwt';
-import { GoogleService } from 'src/shared/services/google.service';
+import { GoogleService } from '../../shared/services/google.service';
 import { EmailService } from '../email/email.service';
 import { AddressService } from '../address/address.service';
 import * as moment from 'moment'

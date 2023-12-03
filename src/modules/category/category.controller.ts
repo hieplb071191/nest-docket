@@ -5,6 +5,8 @@ import { Role } from 'src/Common/roles.enum';
 import { Roles } from 'src/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RoleGuards } from 'src/guards/role.guard';
+import { CreateCategory } from './dto/category-create.dto';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('category')
 export class CategoryController {
@@ -16,7 +18,7 @@ export class CategoryController {
     @Roles([Role.ADMIN, Role.USER])
     @UseGuards(RoleGuards)
     @Post()
-    createCategory(@Body() dto: any){
-        return this.service.create(dto)
+    createCategory(@Body() dto: CreateCategory, @User() user){
+        return this.service.create(dto, user)
     }
 }

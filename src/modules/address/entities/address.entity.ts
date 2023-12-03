@@ -1,5 +1,5 @@
-import { Users } from "src/modules/user/entities/user.entity";
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Users } from "../../../modules/user/entities/user.entity";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, VirtualColumn } from "typeorm";
 
 
 @Entity()
@@ -49,10 +49,14 @@ export class Addresses {
     })
     userId: string;
 
+    @VirtualColumn({
+        query: (alias) => alias
+    })
+    distance: number
+
     @OneToOne((type) => Users)
     @JoinColumn({
         name: 'userId',
-        referencedColumnName: 'id'
     })
     users: Users
 }
