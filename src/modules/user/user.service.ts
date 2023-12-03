@@ -16,6 +16,6 @@ export class UserService {
     }
 
     async getInfo(user) {
-        return await this.repository.getInfoUser(user.id)
+        return await this.repository.getInfo(user)
     }
 }

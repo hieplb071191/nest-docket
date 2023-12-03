@@ -5,10 +5,4 @@ export class CreateCategory {
     @IsString()
     @IsNotEmpty()
     title: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @IsUUID()
-    createdBy: string;
-
 }

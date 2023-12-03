@@ -1,5 +1,6 @@
-import { Users } from "src/modules/user/entities/user.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ProductEntity } from "../../../modules/product/entities/product.entity";
+import { Users } from "../../../modules/user/entities/user.entity";
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -27,4 +28,16 @@ export class Categories {
         name: 'createdBy'
     })
     users: Users
+
+    @OneToMany(type => ProductEntity, product => product.category)
+    @JoinColumn({
+        name: 'categoryId'
+    })
+    products: ProductEntity[]
+
+    @OneToMany(type => ProductEntity, product => product.subCategory)
+    @JoinColumn({
+        name: 'subCategoryId'
+    })
+    subProducts: ProductEntity[]
 }

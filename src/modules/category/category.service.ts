@@ -13,7 +13,7 @@ export class CategoryService {
         private readonly repository: CategoryRepository
     ){}
 
-    async create(dto: CreateCategory) {
+    async create(dto: CreateCategory, user) {
         // const oldModel = await this.model.findOne(
         //     {   select: ['id', 'title'],
         //         where: {
@@ -22,7 +22,9 @@ export class CategoryService {
         //         relations: ['users']
         //     })  
 
-        const oldModel = await this.repository.findOne(dto)
+        const oldModel = await this.repository.findOne({where: {
+            title: dto.title
+        }})
 
         if(oldModel) {
             throw new BadRequestException('title existed')
@@ -34,6 +36,8 @@ export class CategoryService {
             slug,
             createdAt: new Date(),
             updated: new Date(),
+            createdBy: user.id,
+            updatedBy: user.id
         }
         return await this.repository.create(model)
     }
